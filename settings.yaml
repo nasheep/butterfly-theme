@@ -8,6 +8,13 @@ spec:
       label: 基本
       formSchema:
         - $formkit: text
+          name: url
+          label: 站点地址
+          placeholder: 请填写站点地址
+          value: https://example.com
+          help: 站点地址使用http或https开头
+          validation: required
+        - $formkit: text
           name: metadata_name
           label: 作者的唯一标识 metadata.name
           placeholder: 请填写 作者的唯一标识 metadata.name
@@ -49,16 +56,16 @@ spec:
         - $formkit: text
           name: theme_color_light
           label: 主题颜色（浅色）
-          value: '#49b1f5'
+          value: '#4c4948'
           placeholder: 请填写主题 浅色 颜色
-          help: '主题颜色运用到大部分模块色调，默认 #49b1f5'
+          help: '主题颜色运用到大部分模块色调，默认 #4c4948'
           validation: required
         - $formkit: text
           name: theme_color_dark
           label: 主题颜色（深色）
-          value: '#ff7242'
+          value: '#4c4948'
           placeholder: 请填写主题 深色 颜色
-          help: '主题颜色运用到大部分模块色调，默认 #ff7242'
+          help: '主题颜色运用到大部分模块色调，默认 #4c4948'
           validation: required
         - $formkit: text
           name: content_max_width
@@ -83,8 +90,6 @@ spec:
               label: "游览器默认字体"
             - value: "CircularBody"
               label: "CircularBody"
-            - value: "HarmonyOS_Regular"
-              label: "HarmonyOS_Regular"
 
     - group: loading
       label: 加载
@@ -93,7 +98,7 @@ spec:
           name: enable_random_img
           label: 启用随机图片
           help: 是否启用随机图API（必须先配置 API），开启后将使用随机图填充没有设置封面的，未开启时使用主题内置的封面图
-          value: true
+          value: false
           options:
             - label: 启用
               value: true
@@ -160,8 +165,8 @@ spec:
           name: shadow
           label: 卡片阴影
           placeholder: 请填写 卡片阴影
-          value: 0 3px 8px 6px rgba(7,17,27,0.05)
-          help: 卡片阴影，颜色值，默认 0 3px 8px 6px rgba(7,17,27,0.05)
+          value: 0 1px 8px 2px rgba(7,17,27,0.04)
+          help: 卡片阴影，颜色值，默认 0 1px 8px 2px rgba(7,17,27,0.04)
           validation: required
 
     - group: aside
@@ -181,7 +186,7 @@ spec:
           name: position
           label: 侧边栏位置
           help: 侧边栏展示位置，左边或右边
-          value: aside-right
+          value: aside-left
           options:
             - label: 左边
               value: aside-left
@@ -247,31 +252,6 @@ spec:
       label: 首页
       formSchema:
         - $formkit: radio
-          name: enable_above
-          label: 启用第一屏
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
-        - $formkit: attachment
-          name: above_background
-          label: 第一屏背景图
-          placeholder: 请填写 第一屏背景图
-          value: 'https://fastly.jsdelivr.net/npm/halo-theme-butterfly@latest/above.png'
-          help: 如果全局背景图设置为图片链接，则此处背景图将不生效
-          validation: required
-        - $formkit: textarea
-          rows: 5
-          name: typewriter
-          label: 打字机文案
-          placeholder: 请填写 打字机文案
-          value: 欢迎来到我的博客 &+& 请填写打字机文案
-          help: 首页第一屏打字机文案 (注：多个文案用 &+& 隔开)
-          validation: required
-        - $formkit: radio
           name: post_layout
           label: 文章布局方式
           help: 文章布局方式 提供（列表、平铺）两种，仅首页生效
@@ -285,38 +265,18 @@ spec:
     - group: post
       label: 文章
       formSchema:
-        - $formkit: radio
-          name: enable_above
-          label: 启用第一屏 （由于设计原因文章页面 此功能还未实现）
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
         - $formkit: text
           name: out_date
           label: 文章过期
           placeholder: 请填写 文章过期时间
-          value: 30
-          help: 文章过期-卡片提醒，默认30天 如果填写0不展示
+          value: 0
+          help: 文章过期-卡片提醒，默认0不展示（单位：天）
           validation: required|number
-        - $formkit: radio
-          name: enable_h_title
-          label: 启用文章标题图标
-          help: 启用文章标题图标 （h1 ~ h6）前面的图标
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
         - $formkit: radio
           name: enable_reward
           label: 启用打赏
           help: 启用文章打赏，请正确填写名称和二维码图片链接
-          value: true
+          value: false
           options:
             - label: 启用
               value: true
@@ -336,23 +296,6 @@ spec:
     - group: archives
       label: 归档
       formSchema:
-        - $formkit: radio
-          name: enable_above
-          label: 启用第一屏
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
-        - $formkit: attachment
-          name: above_background
-          label: 第一屏背景图
-          placeholder: 请填写 第一屏背景图
-          value: 'https://fastly.jsdelivr.net/npm/halo-theme-butterfly@latest/above.png'
-          help: 如果全局背景图设置为图片链接，则此处背景图将不生效
-          validation: required
         - $formkit: text
           name: custom_title
           label: 自定义标题
@@ -364,23 +307,6 @@ spec:
     - group: categories
       label: 分类
       formSchema:
-        - $formkit: radio
-          name: enable_above
-          label: 启用第一屏
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
-        - $formkit: attachment
-          name: above_background
-          label: 第一屏背景图
-          placeholder: 请填写 第一屏背景图
-          value: 'https://fastly.jsdelivr.net/npm/halo-theme-butterfly@latest/above.png'
-          help: 如果全局背景图设置为图片链接，则此处背景图将不生效
-          validation: required
         - $formkit: text
           name: custom_title
           label: 自定义标题
@@ -402,23 +328,6 @@ spec:
     - group: tags
       label: 标签
       formSchema:
-        - $formkit: radio
-          name: enable_above
-          label: 启用第一屏
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
-        - $formkit: attachment
-          name: above_background
-          label: 第一屏背景图
-          placeholder: 请填写 第一屏背景图
-          value: 'https://fastly.jsdelivr.net/npm/halo-theme-butterfly@latest/above.png'
-          help: 如果全局背景图设置为图片链接，则此处背景图将不生效
-          validation: required
         - $formkit: text
           name: custom_title
           label: 自定义标题
@@ -436,37 +345,6 @@ spec:
               value: list
             - label: 平铺
               value: tile
-
-    - group: single
-      label: 独立页
-      formSchema:
-        - $formkit: radio
-          name: enable_above
-          label: 启用第一屏
-          help: 启用首页第一屏
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
-        - $formkit: attachment
-          name: above_background
-          label: 第一屏背景图
-          placeholder: 请填写 第一屏背景图
-          value: 'https://fastly.jsdelivr.net/npm/halo-theme-butterfly@latest/above.png'
-          help: 如果全局背景图设置为图片链接，则此处背景图将不生效
-          validation: required
-        - $formkit: radio
-          name: enable_h_title
-          label: 启用文章标题图标
-          help: 启用文章标题图标 （h1 ~ h6）前面的图标
-          value: true
-          options:
-            - label: 启用
-              value: true
-            - label: 禁用
-              value: false
 
     - group: code
       label: 代码块

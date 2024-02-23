@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light" xmlns:th="https://www.thymeleaf.org"
-      th:fragment="layout (page,title,head,above,content,js)"
+      th:fragment="layout (page,title,head,content,js)"
       th:with="assets_link=${theme.config.other.enable_cdn_link ? theme.config.other.cdn_link : #theme.assets('/')},random_img = ${theme.config.loading.enable_random_img ? theme.config.loading.random_img : 'null'},theme_version = ${'?v='+ theme.spec.version} ">
 <head th:with="is_body_bg_http = ${#strings.containsIgnoreCase(theme.config.style.body_background,'http')}">
   <title th:text="${title}"></title>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+  <meta name="msvalidate.01" content="4CE91C18711A4B8A580A980814891424" />
   <meta name="author" th:content="${site.title}">
   <meta name="site" th:content="${site.url}">
   <meta property="og:keywords" th:content="${site.seo.keywords}">
@@ -41,8 +43,6 @@
       --card-border-radius: /*[(${theme.config.card.radius})]*/ 24px;
       --card-bg-color: /*[(${theme.config.card.bg_color})]*/ transparent;
       --card-box-shadow: /*[(${theme.config.card.shadow})]*/ transparent;
-      --cursor-default: url("[(${assets_link+'/plugins/cursor/simple/default.cur'})]"), auto;
-      --cursor-pointer: url("[(${assets_link+'/plugins/cursor/simple/pointer.cur'})]"), auto;
     }
 
     html[data-theme=dark] {
@@ -55,23 +55,17 @@
     }
   </style>
   <th:block th:if="${theme.config.style.font_family != 'no'}">
-    <link rel="preload" as="style" onload="this.rel='stylesheet'"
-          th:href="${assets_link+'/font/'+theme.config.style.font_family+'.min.css'}">
+    <link rel="preload" as="style" onload="this.rel='stylesheet'" th:href="${assets_link+'/font/'+theme.config.style.font_family+'.min.css'}">
   </th:block>
-  <link rel="preload" as="style" onload="this.rel='stylesheet'"
-        th:href="${assets_link+'/css/global.min.css' + theme_version}">
-  <link rel="preload" as="style" onload="this.rel='stylesheet'"
-        th:href="${assets_link+'/plugins/fontawesome/fontawesome.min.css'}">
-  <link rel="preload" as="style" onload="this.rel='stylesheet'"
-        th:href="${assets_link+'/plugins/animate/animate.min.css'}">
+  <link rel="preload" as="style" onload="this.rel='stylesheet'" th:href="${assets_link+'/css/global.min.css' + theme_version}">
+  <link rel="preload" as="style" onload="this.rel='stylesheet'" th:href="${assets_link+'/plugins/fontawesome/fontawesome.min.css'}">
+  <link rel="preload" as="style" onload="this.rel='stylesheet'"  th:href="${assets_link+'/plugins/animate/animate.min.css'}">
   <th:block th:insert="${head}"></th:block>
   <link rel="stylesheet" th:href="${assets_link+'/plugins/Qmsg/Qmsg.min.css'}">
 </head>
 <body>
 <div id="Butterfly" th:class="${page}"
-     th:with="stats = ${siteStatsFinder.getStats()},contributor = ${contributorFinder.getContributor(theme.config.base.metadata_name)}
-">
-  
+     th:with="stats = ${siteStatsFinder.getStats()},contributor = ${contributorFinder.getContributor(theme.config.base.metadata_name)}">
   <!--/* 头部--><!--*/-->
   <header class="header relative w-100">
     <nav class="nav flex flex-wrap flex-align-items-center  top-0 absolute z-80 w-100">
@@ -82,7 +76,7 @@
         <li class="menu-item search" th:if="${pluginFinder.available('PluginSearchWidget')}">
           <a class="menu-link relative inline-block" href="javascript:SearchWidget.open();">
             <i class="fas fa-search fa-fw"></i>
-            <span class="menu-name">搜索</span>
+            <span class="menu-name">搜 索</span>
           </a>
         </li>
         <li class="menu-item toggle">
@@ -90,12 +84,11 @@
           <i class="fas fa-bars fa-fw"></i>
         </span>
         </li>
-        <!--/* toggle--><!--*/-->
 
+        <!--/* toggle--><!--*/-->
         <th:block th:each="menuItem : ${menuFinder.getPrimary().menuItems}">
           <li th:if="${#lists.isEmpty(menuItem.children)}" class="menu-item menu-pc">
-            <a class="menu-link relative inline-block" th:href="${menuItem.status.href}"
-               th:target="${menuItem.spec.target}" data-pjax>
+            <a class="menu-link relative inline-block" th:href="${menuItem.status.href}" data-pjax>
               <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
                  th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"></i>
               <span class="menu-name" th:text="${menuItem.status.displayName}"> </span>
@@ -120,78 +113,73 @@
                 </a>
               </li>
             </ul>
-
           </li>
-
         </th:block>
       </ul>
     </nav>
 
     <!--/* 移动端侧边栏--><!--*/-->
     <div class="sidebar fixed top-0">
-      <div class="sidebar-avatar text-center overflow-hidden">
-        <img class="w-100 h-100"
-             th:src="${theme.config.loading.preload}"
-             th:attr="onerror='this.src='+${'`'+theme.config.loading.err+'`'}"
-             th:data-lazy-src="${contributor.avatar}"
-             th:alt="${contributor.displayName}" alt="">
+      <div class="navbar-slideout active">
+          <div class="navbar-slideout-wrap">
+              <div class="navbar-slideout-author">
+                  <img width="50" height="50" th:src="${contributor.avatar}" th:alt="${contributor.displayName}" class="avatar"/>
+                  <div class="info">
+                      <p class="sidebar-name" th:text="${contributor.displayName}"></p>
+                  </div>
+              </div>
+              <ul class="sidebar-menus">
+                  <li class="item">
+                      <i class="fa fa-solid fa-square-pen"></i>
+                      <span>累计撰写 <strong th:text="${stats.post}"></strong> 篇文章</span>
+                  </li>
+                  <li class="item">
+                      <i class="fa fa-solid fa-tags"></i>
+                      <span>累计创建 <strong th:text="${stats.category}"></strong> 个分类</span>
+                  </li>
+                  <li class="item">
+                      <i class="fa fa-solid fa-comment-dots"></i>
+                      <span>累计收到 <strong th:text="${stats.comment}"></strong> 条评论</span>
+                  </li>
+              </ul>
+              <ul class="sidebar-menus">
+                <th:block th:each="menuItem : ${menuFinder.getPrimary().menuItems}">
+                  <li th:if="${#lists.isEmpty(menuItem.children)}" class="menu-item">
+                    <a class="menu-link relative block" th:href="${menuItem.status.href}" data-pjax>
+                      <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
+                        th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"></i>
+                      <span class="menu-name" th:text="${menuItem.status.displayName}"> </span>
+                    </a>
+                  </li>
+        
+                  <li th:unless="${#lists.isEmpty(menuItem.children)}" class="menu-item relative">
+                    <div class="menu-link relative">
+                      <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
+                        th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"></i>
+                      <span class="menu-name" th:text="${menuItem.status.displayName}"></span>
+                      <i class="fas fa-chevron-down absolute"></i>
+                    </div>
+                    <ul class="menu-child none">
+                      <li th:each="dropdown : ${menuItem.children}" class="menu-child--item">
+                        <a th:href="@{${dropdown.status.href}}" class="menu-child--link w-100 block">
+                          <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(dropdown, 'icon', ''))}"
+                            th:class="${#annotations.getOrDefault(dropdown, 'icon', '')}"></i>
+                          <span th:text="${dropdown.status.displayName}" class="menu-child-name"></span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </th:block>
+              </ul>
+          </div>
       </div>
-      <div class="sidebar-data w-100 text-center">
-        <a class="item" title="文章" href="/archives">
-          <div class="headline">文章</div>
-          <div class="num text-overflow" th:text="${stats.post}"></div>
-        </a>
-        <a class="item" href="/categories" title="分类">
-          <div class="headline">分类</div>
-          <div class="num text-overflow" th:text="${stats.category}"></div>
-        </a>
-        <a class="item" title="评论" href="javascript:">
-          <div class="headline">评论</div>
-          <div class="num text-overflow" th:text="${stats.comment}"></div>
-        </a>
-      </div>
-      <hr>
-      <ul class="sidebar-menus">
-        <th:block th:each="menuItem : ${menuFinder.getPrimary().menuItems}">
-          <li th:if="${#lists.isEmpty(menuItem.children)}" class="menu-item">
-            <a class="menu-link relative block" th:href="${menuItem.status.href}"
-               th:target="${menuItem.spec.target}" data-pjax>
-              <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
-                 th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"></i>
-              <span class="menu-name" th:text="${menuItem.status.displayName}"> </span>
-            </a>
-          </li>
-
-          <li th:unless="${#lists.isEmpty(menuItem.children)}" class="menu-item relative">
-            <div class="menu-link relative">
-              <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
-                 th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"></i>
-              <span class="menu-name" th:text="${menuItem.status.displayName}"></span>
-              <i class="fas fa-chevron-down absolute"></i>
-            </div>
-            <ul class="menu-child none">
-              <li th:each="dropdown : ${menuItem.children}" class="menu-child--item">
-                <a th:href="@{${dropdown.status.href}}" class="menu-child--link w-100 block">
-                  <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(dropdown, 'icon', ''))}"
-                     th:class="${#annotations.getOrDefault(dropdown, 'icon', '')}"></i>
-                  <span th:text="${dropdown.status.displayName}" class="menu-child-name"></span>
-                </a>
-              </li>
-            </ul>
-
-          </li>
-
-        </th:block>
-      </ul>
     </div>
-
-    <th:block th:insert="${above}"></th:block>
   </header>
 
   <!--/* 主要部分--><!--*/-->
   <main th:insert="${content}"
-        th:with="is_off_aside = ${theme.config.aside.enable ? (theme.config.aside.position) : 'off-aside' }"
-        th:class="'main flex animated fadeIn margin-0-auto '+ ${is_off_aside}"
+        th:with="class = ${theme.config.aside.enable ? (theme.config.aside.position) : 'off-aside' }"
+        th:class="'main flex animated fadeIn margin-0-auto '+ ${class}"
   >
   </main>
   <!--/* footer--><!--*/-->
@@ -216,10 +204,9 @@
         th:text="'公安备案：'+${theme.config.base.police}"></a>
     </div>
     <halo:footer/>
-    <div class="powered">Powered by&nbsp;
-      <a class="halo" href="https://halo.run/" target="_blank">Halo</a>&nbsp;|&nbsp;🌈 Theme by&nbsp;
-      <a class="theme" title="当前主题：Butterfly" href="https://github.com/dhjddcn/halo-theme-butterfly" target="_blank">小红</a>
-    </div>
+    <div class="powered">Powered by&nbsp;<a class="halo" th:href="${theme.config.base.url}" target="_blank">PlayLab</a>&nbsp;|&nbsp;
+      Theme by&nbsp;<a class="theme" title="Butterfly" href="https://github.com/jerryc127/hexo-theme-butterfly"
+                       target="_blank">Butterfly</a></div>
   </footer>
   <!--/* 左右小部件--><!--*/-->
   <div class="adsorption z-80 fixed">
@@ -232,7 +219,7 @@
     </button>
 
     <button class="back-top  block btn-effect text-center" type="button" title="回到顶部">
-      <i class="fa-solid fa-up"></i>
+      <i class="fas fa-circle-up"></i>
     </button>
   </div>
 
@@ -245,6 +232,6 @@
 <script type="text/javascript" th:src="${assets_link+'/plugins/Qmsg/Qmsg.min.js'}"></script>
 <script type="text/javascript" th:src="${assets_link+'/js/global.min.js'+theme_version}"></script>
 <th:block th:insert="${js}"/>
-<script type="text/javascript" th:src="${assets_link+'/plugins/busuanzi/busuanzi.pure.min.js'}"></script>
+<script type="text/javascript" th:src="${assets_link+'/plugins/busuanzi/busuanzi.pure.mini.js'}"></script>
 </body>
 </html>

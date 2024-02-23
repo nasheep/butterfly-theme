@@ -5,20 +5,11 @@
   page = 'post',
   title = ${post.spec.title},
   head = ~{::head},
-  above = ~{::above},
   content = ~{::content},
   js = ~{::js}
   )}">
 >
 <th:block th:fragment="head">
-  <style
-    th:inline="css"
-    th:with="above_background= ${is_body_bg_http ? '' : 'url(' + (#strings.isEmpty(post.spec.cover) ? random_img + '?date=' + #dates.createNow().getTime() : post.spec.cover) + ')'}
-  ">
-    .above {
-      --above-background: /*[(${above_background})]*/ transparent;
-    }
-  </style>
   <th:block th:if="${theme.config.code.enable}">
     <link rel="preload" as="style" onload="this.rel='stylesheet'"
           th:href="${assets_link+'/plugins/prism/prism.min.css'}">
@@ -42,60 +33,6 @@
   </script>
 </th:block>
 
-<section th:fragment="above" class="above relative w-100">
-  <div class="post-info absolute w-100 text-center">
-    <h1 class="post-title font-weight-400 text-clamp text-cmp3" th:text="${post.spec.title}"></h1>
-    <div class="post-meta">
-      <div class="line">
-        <span class="wp publishTime">
-            <i class="fa-solid fa-calendar-days"></i>
-            <time th:text="'发布于 '+${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-        </span>
-
-        <!--/* todo  需要添加更新时间-->
-        <span class="wp publishTime">
-            <span class="fk">|</span>
-            <i class="fas fa-history fa-fw"></i>
-            <time th:text="'更新于 '+${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-        </span>
-        <!--*/-->
-
-        <span class="wp category">
-            <span class="fk">|</span>
-            <i class="fas fa-inbox"></i>
-            <span class="cys">
-              <th:block th:each="cy : ${post.categories}">
-                <a class="lk" th:href="${cy.status.permalink}" th:text="${cy.spec.displayName}"></a>
-               <span class="point">•</span>
-              </th:block>
-            </span>
-          </span>
-
-      </div>
-      <div class="line" th:with="leg = ${#strings.length(#strings.trim(post.content.content))}">
-        <span class="wordCount">
-          <i class="fa-solid fa-list-ol"></i>
-          <span th:text="'字数总计 '+${leg}"></span>
-        </span>
-
-        <span class="fk">|</span>
-
-        <span class="clock">
-           <i class="fa-regular fa-clock"></i>
-          <span th:text="'阅读时长 '+${leg/400}+'分钟'"></span>
-        </span>
-
-        <span class="fk">|</span>
-
-        <span class="visit">
-          <i class="far fa-eye fa-fw"></i>
-          <span th:text="'阅读量 '+${post.stats.visit}"></span>
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <th:block th:fragment="content">
   <section class="container card ">
     <!--/* todo  publishTime 此时间需要改为更新时间--><!--*/-->
@@ -105,7 +42,7 @@
     </div>
 
     <article th:utext="${post.content.content}"
-             th:class="'render-html  single_code_select' + ${ theme.config.code.enable_line ? ' line-numbers' : ''} + ${ !theme.config.post.enable_h_title ? ' enable_h_title' : ''} "></article>
+             th:class="'render-html  single_code_select' + ${ theme.config.code.enable_line ? ' line-numbers' : ''} "></article>
 
     <div class="post-copyRight relative">
       <i class="fa-solid fa-copyright absolute"></i>
@@ -120,7 +57,7 @@
         <span class="name">本文链接：</span>
         <span class="text">
               <a class="permalink" href="/" th:href="${post.status.permalink}" target="_blank"
-                 th:text="${post.status.permalink}"></a>
+                 th:text="${theme.config.base.url+post.status.permalink}"></a>
             </span>
       </div>
 
@@ -142,7 +79,7 @@
                class="link inline-block text-center"
                th:href="${cts.status.permalink}"
             >
-              <i class="fa-regular fa-folders"></i>
+              <i class="fa-solid fa-folder-open"></i>
               <span th:text="${cts.spec.displayName}" class="name"></span>
             </a>
           </span>
@@ -150,9 +87,8 @@
             <a th:each=" tag : ${post.tags}"
                class="link inline-block text-center"
                th:href="${tag.status.permalink}"
-               th:style="'--spec-color: ' + ${tag.spec.color}"
             >
-              <i class="fa-regular fa-tags"></i>
+              <i class="fa-solid fa-tags"></i>
               <span th:text="${tag.spec.displayName}" class="name"></span>
             </a>
           </span>
@@ -160,54 +96,45 @@
 
     <div class="post-support">
       <div class="title text-center">喜欢就支持一下吧</div>
-
       <div class="content flex flex-justify-content-center">
-        <!--/* todo 待开发-->
-        <a
-          class="praise item cursor-pointer inline-flex flex-direction-column flex-justify-content-center  flex-align-items-center"
-          href="">
-          <i class="fa-light fa-thumbs-up"></i>
-          <span th:text="'点赞 '+${post.stats.upvote}"></span>
-        </a>
-        <!--*/-->
-
         <div
           class="share relative item cursor-pointer inline-flex flex-direction-column flex-justify-content-center  flex-align-items-center">
-          <i class="fa-light fa-arrow-up-right-from-square"></i>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
           <span>分享</span>
           <ul class="share-dropdown absolute z-50">
             <li class="dropdown-item">
-              <a
-                th:href="'https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+${post.status.permalink}+'&title='+${post.spec.title}+'&pics='+${post.spec.cover}+'&summary='+${post.spec.excerpt.raw}">
+              <a target="_blank" 
+                th:href="'https://t.me/share?url='+${theme.config.base.url+post.status.permalink}+'&text='+${post.spec.title}">
               <span class="icon inline-flex flex-justify-content-center flex-align-items-center">
-                <i class="fa-regular fa-atom-simple"></i>
+                <i class="fa-brands fa-telegram"></i>
               </span>
-                <span class="name">QQ空间</span>
+                <span class="name">Telegram</span>
               </a>
             </li>
 
             <li class="dropdown-item">
-              <a
-                th:href="'https://connect.qq.com/widget/shareqq/index.html?url='+${post.status.permalink}+'&title='+${post.spec.title}+'&pics='+${post.spec.cover}+'&desc='+${post.spec.excerpt.raw}">
+              <a target="_blank" 
+                th:href="'https://twitter.com/intent/tweet?url='+${theme.config.base.url+post.status.permalink}+'&text='+${post.spec.title}">
               <span class="icon inline-flex flex-justify-content-center flex-align-items-center">
-                 <i class="fa-brands fa-qq"></i>
+                <i class="fa-brands fa-x-twitter fa-sm"></i>
               </span>
-                <span class="name">QQ好友</span>
+                <span class="name">X·Twitter</span>
               </a>
             </li>
 
-            <!--/* todo 待开发-->
             <li class="dropdown-item">
+              <a target="_blank" 
+                th:href="'https://www.facebook.com/sharer/sharer.php?u='+${theme.config.base.url+post.status.permalink}">
               <span class="icon inline-flex flex-justify-content-center flex-align-items-center">
-                 <i class="fa-regular fa-image"></i>
+                <i class="fa-brands fa-facebook"></i>
               </span>
-              <span class="name">海报分享</span>
+                <span class="name">Facebook</span>
+              </a>
             </li>
-            <!--*/-->
 
             <li class="dropdown-item copy-permalink">
               <span class="icon inline-flex flex-justify-content-center flex-align-items-center">
-               <i class="fa-regular fa-link"></i>
+                <i class="fa-solid fa-link fa-xs"></i>
               </span>
               <span class="name">复制链接</span>
             </li>

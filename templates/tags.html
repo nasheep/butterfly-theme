@@ -5,29 +5,13 @@
   page = 'tags',
   title = ${theme.config.tags.custom_title},
   head = ~{::head},
-  above = ~{::above},
   content = ~{::content},
   js = ~{::js}
   )}">
 >
 <th:block th:fragment="head">
-  <style th:inline="css"
-         th:with="above_background= ${is_body_bg_http ? '' : 'url(' + theme.config.tags.above_background + ')'}">
-    .above {
-      --above-background: /*[(${above_background})]*/ transparent;
-    }
-  </style>
   <link rel="stylesheet" th:href="${assets_link+'/css/tags.min.css' + theme_version}">
 </th:block>
-
-<section
-  th:fragment="above"
-  th:if="${theme.config.tags.enable_above}"
-  class="above relative w-100">
-  <h1 class="absolute above-public-title font-weight-400 margin-0 left-0 right-0 text-center"
-      th:text="${theme.config.tags.custom_title}"></h1>
-</section>
-
 
 <th:block th:fragment="content">
   <section class="container card" th:with="noData = ${not #lists.isEmpty(tags)}">
